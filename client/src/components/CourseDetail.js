@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios'; 
 import ReactMarkdown from "react-markdown";
 
 
@@ -8,14 +7,30 @@ class CourseDetail extends Component {
       super()
       this.state = {
         course: [],
+        name: '',
+        authUser: false 
       };
     }
 
-    componentDidMount() {
-      axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
+    async componentDidMount() {
+      const { context } = this.props; 
+
+      await context.data.getCourse(this.props.match.params.id)
         .then(response => {
-          this.setState({
-            course: response.data
+         if (context.authenticatedUser !== null) {
+             if (context.authenticatedUser.emailAddress === response.User.emailAddress) {
+                 this.setState({
+                     authUser: true 
+                 });
+             } else {
+                 this.setState({
+                     authUser: false 
+                 });
+             }
+         } 
+         this.setState({
+            course: response,
+            name: `${response.User.firstName} ${response.User.lastName}`
          })
       })
       .catch(error => {
@@ -25,31 +40,34 @@ class CourseDetail extends Component {
       });
     }
 
-deleteCourse() {
-
-    axios.delete(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
-    .then(res => {
-        const course = res.data;
-        this.setState({ course});
-        const emailAddress = this.props.context.authenticated.emailAddress;
-        const passWord = this.props.context.authenticated.passWord;
-    })
-}
-
   render() {
+      console.log(this.state.authUser)
       const {context} = this.props;
-      console.log(context);
+      let emailAddress; 
+      let password; 
+      if (this.state.authUser) {
+          emailAddress = context.authenticatedUser.emailAddress
+          password = context.authenticatedUserPassWord
+      }
     return(
       <div> 
         <div>
         <div className="actions--bar">
           <div className="bounds">
             <div className="grid-100">
+            {this.state.authUser ?
             <span>
-                <a className="button" href="update-course.html">Update Course</a>
-                <button onClick={ () => this.deleteCourse(this.state.course.id) } >Remove</button>
-                </span><a
-                className="button button-secondary" href="/">Return to List</a></div>
+                <a className="button" href={`/courses/${this.state.course.id}/update`}>Update Course</a>
+                <button className="button"
+                  onClick={ () => context.data.deleteCourse(this.state.course.id, {emailAddress, password}) 
+                   .then(()=> this.props.history.push('/'))}>
+                  Delete Course
+                </button>
+            </span>
+            :
+            <span> </span> 
+            }
+                <a className="button button-secondary" href="/">Return to List</a></div>
           </div>
         </div>
         <div className="bounds course--detail">
@@ -57,7 +75,7 @@ deleteCourse() {
             <div className="course--header">
               <h4 className="course--label">Course</h4>
               <h3 className="course--title">{this.state.course.title}</h3>
-              <p>By Joe Smith</p>
+              <p>By {this.state.name}</p>
             </div>
             <div className="course--description">
               <ReactMarkdown source={this.state.course.description} />

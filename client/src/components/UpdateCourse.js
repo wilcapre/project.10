@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios'; 
 import Form from './Form';
 
 export default class CreateCourse extends Component {
@@ -11,8 +10,10 @@ export default class CreateCourse extends Component {
       errors: [],
     }
 
-    componentDidMount() {
-        axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
+    async componentDidMount() {
+        const {context} = this.props;
+
+        await context.data.getCourse(this.props.match.params.id)
           .then(course => {
               const {
                 title,
@@ -140,8 +141,8 @@ export default class CreateCourse extends Component {
 
     const {context} = this.props;
     const id = this.props.match.params.id;
-    const emailAddress = this.props.context.authenticated.emailAddress;
-    const passWord = this.props.context.authenticated.passWord;
+    const {emailAddress} = context.authenticatedUser;
+    const password = context.authenticatedUserPassWord;
     const {
         title,
         description,
@@ -155,12 +156,12 @@ export default class CreateCourse extends Component {
         estimatedTime,
         materialsNeeded
       };
-      context.data.updateCourse(course, {id, emailAddress, passWord })
+      context.data.updateCourse(course, id, {emailAddress, password})
       .then( errors => {  
         if (errors.length) {
           this.setState({ errors });
         } else {
-            this.props.history.push('/courses');    
+            this.props.history.push(`/courses/${id}`);    
         }
       })
       // handle rejected promises
@@ -171,7 +172,8 @@ export default class CreateCourse extends Component {
   }
 
   cancel = () => {
-    this.props.history.push('/courses/');
+    const id = this.props.match.params.id;
+    this.props.history.push(`/courses/${id}`);
   }
 
 }

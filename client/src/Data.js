@@ -43,13 +43,22 @@ export default class Data {
     }
     else if (response.status === 400) {
       return response.json().then(data => {
-        return data.errors;
+        return data.error.split(','); 
       });
     }
     else {
       throw new Error();
     }
   }
+
+async getCourse(id) {
+  const response = await this.api(`/courses/${id}`, 'GET', null);
+  if (response.status === 200) {
+    return response.json(); 
+  } else {
+    throw new Error(); 
+  }
+}
 
 async createCourse(course, {emailAddress, password}){
   const response = await this.api('/courses', 'POST', course, true, {emailAddress, password});
@@ -69,8 +78,10 @@ async updateCourse(course, id, {emailAddress, password}){
   const response = await this.api(`/courses/${id}`, 'PUT', course, true, {emailAddress, password});
   if (response.status===204) {
     return [];
-  } else {
-    throw new Error();
+  } else if (response.status === 400) {
+    return response.json().then(data => {
+      return [data.error];
+    })
   }
   
 }
