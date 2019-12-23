@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Form from './Form';
 
-export default class CreateCourse extends Component {
+export default class UpdateCourse extends Component {
     state = {
       title: '',
       description: '',
@@ -91,6 +91,7 @@ export default class CreateCourse extends Component {
                           onChange={this.change}
                           placeholder="Course Description..." />
                        </div>
+                       </div>
                        <div className="grid-25 grid-right">
                          <div className="course--stats">
                            <ul className="course--stats--list">
@@ -116,7 +117,6 @@ export default class CreateCourse extends Component {
                              </li>
                            </ul>
                          </div>
-                       </div>
                      </div>
                   </React.Fragment>
               )}
