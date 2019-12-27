@@ -8,9 +8,11 @@ class Courses extends Component {
       courses: [],
     };
   }
+  // fetch data for the course
   componentDidMount(){
     axios.get('http://localhost:5000/api/courses')
     .then(response => {
+      // sets courses state 
       this.setState({
         courses: response.data
       })
@@ -21,7 +23,7 @@ class Courses extends Component {
      this.props.history.push('/error');
     });
   }
-
+// link to create courses
   createCourseLinks = () => {
     return this.state.courses.map((course) =>
       <div className="grid-33" key={course.id}> <a className="course--module course--link" href={`/courses/${course.id}`}>

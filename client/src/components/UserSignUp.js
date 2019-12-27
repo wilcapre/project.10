@@ -12,6 +12,7 @@ export default class UserSignUp extends Component {
   }
 
   render() {
+    //specifying the parameters username, email and password 
     const {
       firstName,
       lastName,
@@ -82,7 +83,7 @@ export default class UserSignUp extends Component {
   }
 
   submit = () => {
-
+//update the submit() function
     const {context} = this.props;
 
     const {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Form from './Form';
 
+// update course and the initial state value
 export default class UpdateCourse extends Component {
     state = {
       title: '',
@@ -58,7 +59,7 @@ export default class UpdateCourse extends Component {
           name,
           errors
         } = this.state;
-    
+ // return component   
         return (
           <div className="bounds course--detail"> 
             <h1>Update Course</h1>
@@ -125,7 +126,7 @@ export default class UpdateCourse extends Component {
           </div>
         );
     }
-    
+// updates state with the value
     change = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -136,7 +137,7 @@ export default class UpdateCourse extends Component {
           };
         });
       }
-
+// submit form function by using email and password
     submit = () => {
 
     const {context} = this.props;
@@ -170,7 +171,7 @@ export default class UpdateCourse extends Component {
         this.props.history.push('/error');
       });
   }
-
+  // redirect to course route when clicked on the cancel button
   cancel = () => {
     const id = this.props.match.params.id;
     this.props.history.push(`/courses/${id}`);

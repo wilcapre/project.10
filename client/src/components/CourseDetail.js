@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactMarkdown from "react-markdown";
 
-
+// To display course tp user.
 class CourseDetail extends Component {
     constructor(){
       super()
@@ -11,10 +11,9 @@ class CourseDetail extends Component {
         authUser: false 
       };
     }
-
+// Mount details to page and match params from url  
     async componentDidMount() {
       const { context } = this.props; 
-
       await context.data.getCourse(this.props.match.params.id)
         .then(response => {
          if (context.authenticatedUser !== null) {
@@ -39,7 +38,7 @@ class CourseDetail extends Component {
          this.props.history.push('/error');
       });
     }
-
+//
   render() {
       console.log(this.state.authUser)
       const {context} = this.props;

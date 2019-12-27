@@ -58,7 +58,7 @@ export default class UserSignIn extends Component {
       </div>
     );
   }
-
+// change the event value
   change = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -93,7 +93,7 @@ export default class UserSignIn extends Component {
       this.props.history.push('/error');
     });
   }
-
+// cancel
   cancel = () => {
     this.props.history.push('/');
   }
